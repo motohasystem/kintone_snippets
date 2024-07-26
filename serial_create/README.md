@@ -11,3 +11,6 @@
 
 ![JavaScriptファイルの登録方法](img/2024-07-26-14-26-47.png)
 
+# jsdelivr
+https://cdn.jsdelivr.net/gh/motohasystem/kintone_snippets@latest/serial_create/serial_create.js
+

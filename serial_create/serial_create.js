@@ -1,9 +1,6 @@
 const CONSTANTS = {
     FIELDCODE_RADIO_SERIAL: "radio_serialcreate",
-    FIELDVALUE_RADIO_SERIAL: {
-        DISABLE: "無効",
-        ENABLE: "有効",
-    },
+    FIELDVALUE_SERIAL_ENABLED: "有効",
 };
 
 (function () {
@@ -13,7 +10,7 @@ const CONSTANTS = {
     kintone.events.on("app.record.create.submit.success", function (event) {
         console.log({ event });
         const serial = event.record[CONSTANTS.FIELDCODE_RADIO_SERIAL].value;
-        if (serial === CONSTANTS.FIELDVALUE_RADIO_SERIAL.DISABLE) {
+        if (serial !== CONSTANTS.FIELDVALUE_SERIAL_ENABLED) {
             return event;
         }
 
@@ -39,8 +36,14 @@ const CONSTANTS = {
 
     kintone.events.on("app.record.create.show", function (event) {
         // GETパラメータを取得
-        var url = new URL(window.location.href);
-        var recreate = url.searchParams.get("recreate");
+        const url = new URL(window.location.href);
+        const recreate = url.searchParams.get("recreate");
+
+        if (isValid(event) == false) {
+            event.error = `フィールドコード[${CONSTANTS.FIELDCODE_RADIO_SERIAL}]のラジオボタンをフォームに設置して、[${CONSTANTS.FIELDVALUE_SERIAL_ENABLED}]を選択肢に持たせてください`;
+            return event;
+        }
+
         if (recreate === "true") {
             swal({
                 text: "連続作成モードです",
@@ -49,9 +52,21 @@ const CONSTANTS = {
                 timer: 1200,
             });
             event.record[CONSTANTS.FIELDCODE_RADIO_SERIAL].value =
-                CONSTANTS.FIELDVALUE_RADIO_SERIAL.ENABLE;
+                CONSTANTS.FIELDVALUE_SERIAL_ENABLED;
         }
 
         return event;
     });
+
+    // このカスタマイズが動作できる環境かどうかを判定する関数
+    function isValid(event) {
+        // FIELDCODE_RADIO_SERIAL のフィールド情報を取得
+        const field = event.record[CONSTANTS.FIELDCODE_RADIO_SERIAL];
+        // フィールドが存在しない場合はエラー
+        if (field === undefined) {
+            return false;
+        }
+
+        return true;
+    }
 })();
