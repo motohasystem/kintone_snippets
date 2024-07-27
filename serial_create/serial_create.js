@@ -1,10 +1,9 @@
-const CONSTANTS = {
-    FIELDCODE_RADIO_SERIAL: "radio_serialcreate",
-    FIELDVALUE_SERIAL_ENABLED: "有効",
-};
-
 (function () {
     "use strict";
+    const CONSTANTS = {
+        FIELDCODE_RADIO_SERIAL: "radio_serialcreate",
+        FIELDVALUE_SERIAL_ENABLED: "有効",
+    };
 
     // レコード追加イベントに対するハンドラー
     kintone.events.on("app.record.create.submit.success", function (event) {
@@ -29,7 +28,7 @@ const CONSTANTS = {
             // eventを返す
             return event;
         } catch (error) {
-            console.error("エラーが発生しました:", error);
+            console.error("未考慮のエラーが発生しました:", error);
             throw error;
         }
     });
@@ -39,7 +38,14 @@ const CONSTANTS = {
         const url = new URL(window.location.href);
         const recreate = url.searchParams.get("recreate");
 
-        if (isValid(event) == false) {
+        // エラーチェック
+        if (isValidLibraries() == false) {
+            event.error =
+                "SweetAlertライブラリのJavaScriptファイル[ https://unpkg.com/sweetalert/dist/sweetalert.min.js ]をこのアプリのカスタマイズに設定してください。";
+            return event;
+        }
+
+        if (isValidField(event) == false) {
             event.error = `フィールドコード[${CONSTANTS.FIELDCODE_RADIO_SERIAL}]のラジオボタンをフォームに設置して、[${CONSTANTS.FIELDVALUE_SERIAL_ENABLED}]を選択肢に持たせてください`;
             return event;
         }
@@ -58,8 +64,17 @@ const CONSTANTS = {
         return event;
     });
 
-    // このカスタマイズが動作できる環境かどうかを判定する関数
-    function isValid(event) {
+    // SweetAlertライブラリが設定されているかどうかを判定する関数
+    function isValidLibraries() {
+        // SweetAlertライブラリが設定されているかどうかを判定
+        if (typeof swal === "function") {
+            return true;
+        }
+        return false;
+    }
+
+    // このカスタマイズが動作できる環境かを判定する関数
+    function isValidField(event) {
         // FIELDCODE_RADIO_SERIAL のフィールド情報を取得
         const field = event.record[CONSTANTS.FIELDCODE_RADIO_SERIAL];
         // フィールドが存在しない場合はエラー
