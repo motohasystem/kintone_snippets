@@ -28,7 +28,11 @@
             SEARCHBUTTON_FIELD: "button_search", // URLを開くボタンを配置するスペースフィールドのコード
             BUTTON_LABEL: "商品を検索する", // ボタンのラベル
 
-            QUERY_TARGET: "検索フィールド", // domainとappidを指定したアプリが持つフィールドのうち、検索したい情報を格納しているフィールドコード
+            QUERY_TARGET: "snipet_target_field", // 検索対象フィールドを記入するフィールドのフィールドコード
+        };
+
+        const defaultConfig = {
+            QUERY_TARGET: "検索フィールド",
         };
 
         const record = event.record;
@@ -87,7 +91,11 @@
             const query = encodeURIComponent(queryFieldValue);
 
             // 検索対象アプリの対象フィールドコード
-            const searchFieldCode = encodeURIComponent(config.QUERY_TARGET);
+            const searchTarget = record[config.QUERY_TARGET]
+                ? record[config.QUERY_TARGET].value ||
+                  defaultConfig.QUERY_TARGET
+                : defaultConfig.QUERY_TARGET;
+            const searchFieldCode = encodeURIComponent(searchTarget);
 
             // URL生成
             const url = `https://${domain}/k/${appid}/?query=${searchFieldCode}%20like%20%22${query}%22`;
