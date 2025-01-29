@@ -26,7 +26,7 @@
             DOMAIN_FIELD: "snipet_domain", // 検索対象アプリのドメインを記入するフィールドコード
 
             SEARCHBUTTON_FIELD: "button_search", // URLを開くボタンを配置するスペースフィールドの要素ID
-            BUTTON_LABEL: "商品を検索する", // ボタンのラベル
+            BUTTON_LABEL: "検索する", // ボタンのラベル
 
             QUERY_TARGET: "snipet_target_field", // 検索対象フィールドを記入するフィールドのフィールドコード
         };
