@@ -26,9 +26,13 @@
             DOMAIN_FIELD: "snipet_domain", // 検索対象アプリのドメインを記入するフィールドコード
 
             SEARCHBUTTON_FIELD: "button_search", // URLを開くボタンを配置するスペースフィールドの要素ID
-            BUTTON_LABEL: "検索する", // ボタンのラベル
 
             QUERY_TARGET: "snipet_target_field", // 検索対象フィールドを記入するフィールドのフィールドコード
+
+            BUTTON_LABEL: "検索する", // ボタンのラベル（デフォルト値）
+
+            // オプション
+            BUTTON_LABEL_FIELD: "snipet_button_label", // ボタンのラベルを記入するフィールドのフィールドコード、存在しない場合はデフォルトのラベルを使用する
         };
 
         const defaultConfig = {
@@ -50,13 +54,13 @@
         let button;
         if (typeof Kuc !== "undefined" && Kuc.Button) {
             button = new Kuc.Button({
-                text: config.BUTTON_LABEL,
+                text: getButtonLabel(config, record),
                 type: "button",
                 className: "kuc-btn kuc-btn-primary",
             });
         } else {
             button = document.createElement("button");
-            button.textContent = config.BUTTON_LABEL;
+            button.textContent = getButtonLabel(config, record);
             button.className = "kuc-btn kuc-btn-primary";
         }
 
@@ -135,5 +139,14 @@
             appid,
             domain: domain ? domain + ".cybozu.com" : undefined,
         };
+    }
+
+    // ボタンのラベルを取得する
+    function getButtonLabel(config, record) {
+        if (!record.hasOwnProperty(config.BUTTON_LABEL_FIELD)) {
+            return config.BUTTON_LABEL;
+        }
+        const buttonLabel = record[config.BUTTON_LABEL_FIELD].value || "";
+        return buttonLabel || config.BUTTON_LABEL;
     }
 })();
