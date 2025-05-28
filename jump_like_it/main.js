@@ -19,20 +19,21 @@
     ];
 
     kintone.events.on(eventTypes, function (event) {
+        const altSuffix = "_02";
         // フィールド設定
         const config = {
-            QUERY_FIELD: "snipet_query", // 検索キーワードを入力するフィールドのフィールドコード
-            APPID_FIELD: "snipet_appid", // 検索対象アプリのアプリIDを記入するフィールドコード
-            DOMAIN_FIELD: "snipet_domain", // 検索対象アプリのドメインを記入するフィールドコード
+            QUERY_FIELD: "snipet_query" + altSuffix, // 検索キーワードを入力するフィールドのフィールドコード
+            APPID_FIELD: "snipet_appid" + altSuffix, // 検索対象アプリのアプリIDを記入するフィールドコード
+            DOMAIN_FIELD: "snipet_domain" + altSuffix, // 検索対象アプリのドメインを記入するフィールドコード
 
-            SEARCHBUTTON_FIELD: "button_search", // URLを開くボタンを配置するスペースフィールドの要素ID
+            SEARCHBUTTON_FIELD: "button_search" + altSuffix, // URLを開くボタンを配置するスペースフィールドの要素ID
 
-            QUERY_TARGET: "snipet_target_field", // 検索対象フィールドを記入するフィールドのフィールドコード
+            QUERY_TARGET: "snipet_target_field" + altSuffix, // 検索対象フィールドを記入するフィールドのフィールドコード
 
             BUTTON_LABEL: "検索する", // ボタンのラベル（デフォルト値）
 
             // オプション
-            BUTTON_LABEL_FIELD: "snipet_button_label", // ボタンのラベルを記入するフィールドのフィールドコード、存在しない場合はデフォルトのラベルを使用する
+            BUTTON_LABEL_FIELD: "snipet_button_label" + altSuffix, // ボタンのラベルを記入するフィールドのフィールドコード、存在しない場合はデフォルトのラベルを使用する
         };
 
         const defaultConfig = {
