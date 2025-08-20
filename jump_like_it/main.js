@@ -25,6 +25,7 @@
             QUERY_FIELD: "snipet_query" + altSuffix, // 検索キーワードを入力するフィールドのフィールドコード
             APPID_FIELD: "snipet_appid" + altSuffix, // 検索対象アプリのアプリIDを記入するフィールドコード
             DOMAIN_FIELD: "snipet_domain" + altSuffix, // 検索対象アプリのドメインを記入するフィールドコード
+            AND_QUERY_FIELD: "and_query" + altSuffix, // AND条件のクエリを追加するフィールドのフィールドコード、%20and%20 を挟んで追加します
 
             SEARCHBUTTON_FIELD: "button_search" + altSuffix, // URLを開くボタンを配置するスペースフィールドの要素ID
 
@@ -84,34 +85,34 @@
 
             // searchKeyが空の場合はアラートを表示して処理を中断
             if (!searchKey) {
-                alert(
-                    `検索キーワードが未入力です。検索したい文字を入力してください`
-                );
+                alert(`検索キーワードが未入力です。検索したい文字を入力してください`);
                 return;
             }
 
             const queryFieldValue = record[config.QUERY_FIELD].value || "";
+            let andQueryFieldValue = record[config.AND_QUERY_FIELD].value || "";
+
+            if (andQueryFieldValue) {
+                andQueryFieldValue = encodeURIComponent(` and ${andQueryFieldValue}`);
+            }
 
             // URLエンコード
             const query = encodeURIComponent(queryFieldValue);
 
             // 検索対象アプリの対象フィールドコード
             const searchTarget = record[config.QUERY_TARGET]
-                ? record[config.QUERY_TARGET].value ||
-                  defaultConfig.QUERY_TARGET
+                ? record[config.QUERY_TARGET].value || defaultConfig.QUERY_TARGET
                 : defaultConfig.QUERY_TARGET;
             const searchFieldCode = encodeURIComponent(searchTarget);
 
             // URL生成
-            const url = `https://${domain}/k/${appid}/?query=${searchFieldCode}%20like%20%22${query}%22`;
+            const url = `https://${domain}/k/${appid}/?query=${searchFieldCode}%20like%20%22${query}%22${andQueryFieldValue}`;
             window.open(url, "_blank");
         };
         button.style.margin = "8px";
 
         // スペースフィールドにボタンを追加
-        const spaceElement = kintone.app.record.getSpaceElement(
-            config.SEARCHBUTTON_FIELD
-        );
+        const spaceElement = kintone.app.record.getSpaceElement(config.SEARCHBUTTON_FIELD);
         if (!spaceElement) {
             console.error("スペースフィールドが見つかりません");
             return event;
